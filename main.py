@@ -1,8 +1,15 @@
+"use strict";
+
+
 from dotenv import load_dotenv
 import openai
 import os
 import requests
 from flask import Flask, request, jsonify
+
+if __name__ == "__main__":
+    app.run(port=os.getenv("PORT", 3000))
+
 
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_KEY")
@@ -14,6 +21,7 @@ print("ESTOY LEYENDO")
 # Access token for your app
 # Save it as an environment variable
 token = os.getenv("WHATSAPP_TOKEN")
+
 
 
 # Sets server port and logs message on success
@@ -76,10 +84,6 @@ def verify_webhook():
             return challenge, 200
 
     return "Invalid Request", 403
-
-
-if __name__ == "__main__":
-    app.run(port=os.getenv("PORT", 1337))
 
 
 # response = openai.Completion.create(
