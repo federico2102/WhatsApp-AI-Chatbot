@@ -9,6 +9,8 @@ openai.api_key = os.getenv("OPENAI_KEY")
 
 app = Flask(__name__)
 
+print("ESTOY LEYENDO")
+
 # Access token for your app
 # Save it as an environment variable
 token = os.getenv("WHATSAPP_TOKEN")
@@ -42,12 +44,9 @@ def webhook():
             ]
 
             url = (
-                "https://graph.facebook.com/"
-                + str(phone_number_id)
-                + "/messages?access_token="
-                + str(token)
+                f"https://graph.facebook.com/"
+                "v12.0/{phone_number_id}/messages?access_token={token}"
             )
-
             data = {
                 "messaging_product": "whatsapp",
                 "to": from_number,
