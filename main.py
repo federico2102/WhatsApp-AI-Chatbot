@@ -42,9 +42,12 @@ def webhook():
             ]
 
             url = (
-                f"https://graph.facebook.com/"
-                "v12.0/{phone_number_id}/messages?access_token={token}"
+                "https://graph.facebook.com/"
+                + str(phone_number_id)
+                + "/messages?access_token="
+                + str(token)
             )
+
             data = {
                 "messaging_product": "whatsapp",
                 "to": from_number,
