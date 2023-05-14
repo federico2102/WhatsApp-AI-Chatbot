@@ -2,17 +2,14 @@
 
 
 from dotenv import load_dotenv
-import openai
+#import openai
 import os
 import requests
 from flask import Flask, request, jsonify
 
-if __name__ == "__main__":
-    app.run(port=os.getenv("PORT", 3000))
-
 
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_KEY")
+#openai.api_key = os.getenv("OPENAI_KEY")
 
 app = Flask(__name__)
 
@@ -51,10 +48,8 @@ def webhook():
                 "body"
             ]
 
-            url = (
-                f"https://graph.facebook.com/"
-                "v12.0/{phone_number_id}/messages?access_token={token}"
-            )
+            url = "https://graph.facebook.com/v12.0/" + phone_number_id + "/messages?access_token=" + token
+
             data = {
                 "messaging_product": "whatsapp",
                 "to": from_number,
@@ -86,6 +81,8 @@ def verify_webhook():
     return "Invalid Request", 403
 
 
+if __name__ == "__main__":
+  app.run(port=os.getenv("PORT", 3000))
 # response = openai.Completion.create(
 #     engine="davinci", prompt="Once upon a time", max_tokens=50
 # )
