@@ -79,7 +79,7 @@ def verify_webhook():
 
 
 if __name__ == "__main__":
-    app.run(port=os.getenv("PORT", 3000))
+    app.run(port=os.getenv("PORT", 1337))
 
 
 # response = openai.Completion.create(
