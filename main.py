@@ -63,7 +63,7 @@ def webhook():
 #  this URL to setup webhook initially.
 @app.route("/webhook", methods=["GET"])
 def verify_webhook():
-    verify_token = os.environ.get("VERIFY_TOKEN")
+    verify_token = os.getenv("VERIFY_TOKEN")
     print("LLEGO UN MENSAJEEEEE")
 
     mode = request.args.get("hub.mode")
@@ -73,7 +73,7 @@ def verify_webhook():
     if mode and token:
         if mode == "subscribe" and token == verify_token:
             print("WEBHOOK_VERIFIED")
-            #return challenge, 200
+            return challenge, 200
 
     return "Invalid Request", 403
 
