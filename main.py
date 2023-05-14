@@ -15,10 +15,12 @@ token = os.getenv("WHATSAPP_TOKEN")
 
 
 # Sets server port and logs message on success
-@app.route("https://mirage-catkin-leopon.glitch.me/", methods=["POST"])
+@app.route("/", methods=["POST"])
 def webhook():
     # Parse the request body from the POST
     body = request.json
+
+    print("LLEGO UN MENSAJEEEEE")
 
     # Check the Incoming webhook message
     print(jsonify(body))
@@ -60,6 +62,7 @@ def webhook():
 @app.route("/webhook", methods=["GET"])
 def verify_webhook():
     verify_token = os.environ.get("VERIFY_TOKEN")
+    print("LLEGO UN MENSAJEEEEE")
 
     mode = request.args.get("hub.mode")
     token = request.args.get("hub.verify_token")
@@ -77,9 +80,9 @@ if __name__ == "__main__":
     app.run(port=os.environ.get("PORT", 1337), debug=True)
 
 
-response = openai.Completion.create(
-    engine="davinci", prompt="Once upon a time", max_tokens=50
-)
+# response = openai.Completion.create(
+#     engine="davinci", prompt="Once upon a time", max_tokens=50
+# )
 
-generated_text = response["choices"][0]["text"]
-print(generated_text)
+# generated_text = response["choices"][0]["text"]
+# print(generated_text)
