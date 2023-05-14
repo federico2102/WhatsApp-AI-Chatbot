@@ -31,6 +31,19 @@ def webhook():
 
     # Check the Incoming webhook message
     print(jsonify(body))
+    
+    if "object" in body and "entry" in body:
+        entry = body["entry"]
+        for change in entry:
+            if "changes" in change:
+                changes = change["changes"]
+                for change_value in changes:
+                    if "value" in change_value and "messages" in change_value["value"]:
+                        messages = change_value["value"]["messages"]
+                        for message in messages:
+                            text_body = message.get("text", {}).get("body")
+                            if text_body:
+                                print("Text body:", text_body)
 
     # info on WhatsApp text message payload:
     # https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples#text-messages
