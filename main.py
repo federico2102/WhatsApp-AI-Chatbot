@@ -17,7 +17,7 @@ token = os.getenv("WHATSAPP_TOKEN")
 
 
 # Sets server port and logs message on success
-@app.route("/", methods=["POST"])
+@app.route("/webhook", methods=["POST"])
 def webhook():
     # Parse the request body from the POST
     body = request.json
@@ -73,7 +73,7 @@ def verify_webhook():
     if mode and token:
         if mode == "subscribe" and token == verify_token:
             print("WEBHOOK_VERIFIED")
-            return challenge, 200
+            #return challenge, 200
 
     return "Invalid Request", 403
 
