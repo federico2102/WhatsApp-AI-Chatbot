@@ -1,8 +1,9 @@
 from flask import Flask, request, jsonify
-
-import config
-import openai_chat
-import whatsapp
+from datetime import datetime
+from database import create_table, insert_message
+from openai_chat import get_openai_answer
+from whatsapp import send_whatsapp_message
+from utils import adjust_tokens_amount
 
 app = Flask(__name__)
 
@@ -10,8 +11,6 @@ app = Flask(__name__)
 @app.route("/webhook", methods=["POST"])
 def webhook():
     body = request.json
-
-    print(jsonify(body))
 
     if "object" in body and "entry" in body:
         entry = body["entry"]
@@ -25,29 +24,44 @@ def webhook():
                         phone_number_id = value["metadata"]["phone_number_id"]
                         from_number = messages[0]["from"]
                         modified_phone_number = "541115" + from_number[5:]
-                        msg_body = messages[0]["text"]["body"]
+                        msg = messages[0]
 
-                        print("EL NUMERO:", modified_phone_number)
+                        if "text" in msg:
+                            msg_body = msg["text"]["body"]
 
-                        openai_answer = openai_chat.get_openai_answer(msg_body)
-                        generated_text = openai_answer.choices[
-                            0].message.content
-                        print(generated_text)
+                            # Insert the received message into the database
+                            # with the current timestamp
+                            create_table()
+                            timestamp = datetime.now()
+                            insert_message(
+                                modified_phone_number,
+                                'User',
+                                timestamp,
+                                msg_body)
 
-                        whatsapp.send_whatsapp_message(phone_number_id,
-                                                       modified_phone_number,
-                                                       generated_text)
+                            # Get the response from the OpenAI API
+                            openai_answer = get_openai_answer(
+                                modified_phone_number)
+                            generated_text = openai_answer.choices[
+                                0].message.content
+
+                            # Send the generated response via WhatsApp
+                            send_whatsapp_message(
+                                phone_number_id,
+                                modified_phone_number,
+                                generated_text)
+
+                            # Save IA answer in messages table
+                            timestamp = datetime.now()
+                            insert_message(
+                                modified_phone_number,
+                                'AI',
+                                timestamp,
+                                generated_text)
+
+                            # Adjust amount of tokens in chat history
+                            adjust_tokens_amount(modified_phone_number)
+                        else:
+                            print("Received a non-text message:", msg)
 
     return jsonify({"status": "success"}), 200
-
-
-@app.route("/webhook", methods=["GET"])
-def verify_webhook():
-    mode = request.args.get("hub.mode")
-    token = request.args.get("hub.verify_token")
-    challenge = request.args.get("hub.challenge")
-
-    if mode and token:
-        if mode == "subscribe" and token == config.verify_token:
-            print("WEBHOOK_VERIFIED")
-            return challenge, 200

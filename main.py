@@ -1,5 +1,5 @@
 from app import app
-import config
+from config import PORT
 
 if __name__ == "__main__":
-    app.run(port=config.port)
+    app.run(port=PORT)

@@ -1,17 +1,17 @@
 import json
 import requests
+from config import WHATSAPP_TOKEN
 
-import config
 
-
-def send_whatsapp_message(phone_number_id,
-                          modified_phone_number,
-                          generated_text):
+def send_whatsapp_message(
+        phone_number_id,
+        modified_phone_number,
+        generated_text):
     url = (
         "https://graph.facebook.com/v12.0/"
         + phone_number_id
         + "/messages?access_token="
-        + config.token
+        + WHATSAPP_TOKEN
     )
 
     data = {
@@ -23,6 +23,4 @@ def send_whatsapp_message(phone_number_id,
 
     headers = {"Content-Type": "application/json"}
 
-    response = requests.post(url, json=data, headers=headers)
-    print("WhatsApp API Response:", response.status_code)
-    print("WhatsApp API Response Content:", response.json())
+    requests.post(url, json=data, headers=headers)
