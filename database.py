@@ -1,10 +1,8 @@
 import sqlite3
 
-
 def create_table():
     conn = sqlite3.connect('chat_history.db')
     cursor = conn.cursor()
-
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS messages (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -14,10 +12,8 @@ def create_table():
             message TEXT
         )
     ''')
-
     conn.commit()
     conn.close()
-
 
 def insert_message(phone_number, text_author, timestamp, message):
     conn = sqlite3.connect('chat_history.db')
@@ -28,7 +24,6 @@ def insert_message(phone_number, text_author, timestamp, message):
     ''', (phone_number, text_author, timestamp, message))
     conn.commit()
     conn.close()
-
 
 def retrieve_chat_history(phone_number):
     conn = sqlite3.connect('chat_history.db')
@@ -41,15 +36,13 @@ def retrieve_chat_history(phone_number):
     conn.close()
     return chat_history
 
-
 def delete_oldest_messages(phone_number):
     conn = sqlite3.connect('chat_history.db')
     cursor = conn.cursor()
-    cursor.execute("""
+    cursor.execute('''
         DELETE FROM messages WHERE id IN (
-            SELECT id FROM messages WHERE phone_number = ?
-            ORDER BY timestamp ASC LIMIT 2
+            SELECT id FROM messages WHERE phone_number = ? ORDER BY timestamp ASC LIMIT 2
         )
-    """, (phone_number,))
+    ''', (phone_number,))
     conn.commit()
     conn.close()
